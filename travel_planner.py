@@ -3,8 +3,13 @@ import streamlit as st
 from serpapi import GoogleSearch
 import json
 
-MISTRAL_API_KEY = "jZ1CYYXmueeHFl1yMWjfaWQNV0P2TaWH"
-SERPAPI_KEY = "27dbddbcc952dc2b44040cfa9bbf8de105b7d1408a9d295f8c6dca98dbc9f973"
+MISTRAL_API_KEY = st.text_input("Enter your Mistral API Key:", type="password")
+SERPAPI_KEY = st.text_input("Enter your SerpAPI Key:", type="password")
+
+if MISTRAL_API_KEY and SERPAPI_KEY:
+    st.success("API keys saved! You can now generate your travel plan.")
+else:
+    st.warning("Please enter both API keys to proceed.")
 
 # Function to call Mistral AI
 def get_mistral_response(messages):
