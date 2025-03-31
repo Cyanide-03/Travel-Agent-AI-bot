@@ -15,18 +15,17 @@ if not st.session_state.api_keys_entered:
         st.subheader("Enter your API keys to continue:")
         MISTRAL_API_KEY = st.text_input("Mistral API Key:", type="password")
         SERPAPI_KEY = st.text_input("SerpAPI Key:", type="password")
-        # st.warning("Please enter both API keys to proceed.")
 
         if MISTRAL_API_KEY and SERPAPI_KEY:
             st.session_state.MISTRAL_API_KEY = MISTRAL_API_KEY
             st.session_state.SERPAPI_KEY = SERPAPI_KEY
             st.session_state.api_keys_entered = True
-            st.success("API keys saved! Redirecting to the chatbot...")
+            st.success("API keys saved 🔥! Redirecting to the chatbot...")
 
             # Force rerun to refresh UI and show chatbot
             st.rerun()
         else:
-            st.warning("Please enter both API keys to proceed.")
+            st.warning("🗝️ Please enter your own API keys to proceed.")
             st.stop()  # Stop execution until user enters API keys
 
 # Function to call Mistral AI
