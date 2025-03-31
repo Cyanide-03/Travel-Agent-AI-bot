@@ -6,26 +6,29 @@ import json
 st.title("AI Travel Planner 🗺️")
 
 # Store API keys in session state
-if "api_keys_entered" not in st.session_state:
-    st.session_state.api_keys_entered = False
+# if "api_keys_entered" not in st.session_state:
+#     st.session_state.api_keys_entered = False
 
-# If API keys aren't entered, show the input fields
-if not st.session_state.api_keys_entered:
-    st.subheader("Enter your API keys to continue:")
-    MISTRAL_API_KEY = st.text_input("Mistral API Key:", type="password")
-    SERPAPI_KEY = st.text_input("SerpAPI Key:", type="password")
+# # If API keys aren't entered, show the input fields
+# if not st.session_state.api_keys_entered:
+#     st.subheader("Enter your API keys to continue:")
+#     MISTRAL_API_KEY = st.text_input("Mistral API Key:", type="password")
+#     SERPAPI_KEY = st.text_input("SerpAPI Key:", type="password")
 
-    if MISTRAL_API_KEY and SERPAPI_KEY:
-        st.session_state.MISTRAL_API_KEY = MISTRAL_API_KEY
-        st.session_state.SERPAPI_KEY = SERPAPI_KEY
-        st.session_state.api_keys_entered = True
-        st.success("API keys saved 🔥! Redirecting to the chatbot...")
+#     if MISTRAL_API_KEY and SERPAPI_KEY:
+#         st.session_state.MISTRAL_API_KEY = MISTRAL_API_KEY
+#         st.session_state.SERPAPI_KEY = SERPAPI_KEY
+#         st.session_state.api_keys_entered = True
+#         st.success("API keys saved 🔥! Redirecting to the chatbot...")
 
-        # Force rerun to refresh UI and show chatbot
-        st.rerun()
-    else:
-        st.warning("🗝️ Please enter your own API keys")
-        st.stop()  # Stop execution until user enters API keys
+#         # Force rerun to refresh UI and show chatbot
+#         st.rerun()
+#     else:
+#         st.warning("🗝️ Please enter your own API keys")
+#         st.stop()  # Stop execution until user enters API keys
+
+st.session_state.MISTRAL_API_KEY = "SpYdMOViHsHmeeHrrLDuPYmsjxlxS64F"
+st.session_state.SERPAPI_KEY = "1706a7deae638b1eb98d302c94667e447e7000ff089e30fb7b609ab6fe442d66"
 
 # Function to call Mistral AI
 def get_mistral_response(messages):
@@ -42,11 +45,11 @@ def extract_travel_details(chat_history):
     Extract key travel details from the conversation. Return JSON with:
     - "destination": City or country name
     - "duration": Example: '5 days' or '2 weeks'
-    - "interests": ["food", "adventure", "history"]
+    - "interests": "food", "adventure", "history"
     - "budget": "budget", "mid-range", or "luxury"
-    - "dietary": ["vegetarian", "vegan", "no preference"]
+    - "dietary": "vegetarian", "vegan", "no preference"
     - "mobility": "low", "moderate", or "high"
-    - "accommodation": ["budget", "mid-range", "luxury", "central"]
+    - "accommodation": "budget", "mid-range", "luxury", "central"
     - "purpose": "relaxation", "adventure", "cultural immersion", etc.
 
     If details are unspecified, return: { "that field name": "unspecified" }
@@ -146,7 +149,7 @@ def main():
                 extracted_details = extract_travel_details(st.session_state.messages)
 
                 if extracted_details:
-                    # print("Extracted Details: ", extracted_details)
+                    print("Extracted Details: ", extracted_details)
                     for key, value in extracted_details.items():
                         if value != "unspecified" and not st.session_state.detail_progress[key]:
                             st.session_state.travel_details[key] = value
