@@ -1,6 +1,7 @@
 import requests
 import streamlit as st
 from serpapi import GoogleSearch
+from streamlit_lottie import st_lottie
 import json
 
 st.title("AI Travel Planner 🗺️")
@@ -26,6 +27,16 @@ if not st.session_state.api_keys_entered:
     else:
         st.warning("🗝️ Please enter your own API keys")
         st.stop()  # Stop execution until user enters API keys
+
+# Function to load Lottie animation from a file
+def load_lottiefile(filepath: str):
+    with open(filepath, "r") as f:
+        return json.load(f)
+
+# Load Lottie animation
+lottie_animation = load_lottiefile("Animation.json")  # Example travel animation
+
+st_lottie(lottie_animation, speed=1, width=700, height=400, loop=True, key="travel_animation")
 
 # Function to call Mistral AI
 def get_mistral_response(messages):
