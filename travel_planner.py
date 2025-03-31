@@ -3,18 +3,34 @@ import streamlit as st
 from serpapi import GoogleSearch
 import json
 
-MISTRAL_API_KEY = st.text_input("Enter your Mistral API Key:", type="password")
-SERPAPI_KEY = st.text_input("Enter your SerpAPI Key:", type="password")
+st.title("AI Travel Planner 🗺️")
 
-if MISTRAL_API_KEY and SERPAPI_KEY:
-    st.success("API keys saved! You can now generate your travel plan.")
-else:
-    st.warning("Please enter both API keys to proceed.")
+# Store API keys in session state
+if "api_keys_entered" not in st.session_state:
+    st.session_state.api_keys_entered = False
+
+# If API keys aren't entered, show the input fields
+if not st.session_state.api_keys_entered:
+    st.subheader("Enter your API keys to continue:")
+    MISTRAL_API_KEY = st.text_input("Mistral API Key:", type="password")
+    SERPAPI_KEY = st.text_input("SerpAPI Key:", type="password")
+
+    if MISTRAL_API_KEY and SERPAPI_KEY:
+        st.session_state.MISTRAL_API_KEY = MISTRAL_API_KEY
+        st.session_state.SERPAPI_KEY = SERPAPI_KEY
+        st.session_state.api_keys_entered = True
+        st.success("API keys saved! Redirecting to the chatbot...")
+
+        # Force rerun to refresh UI and show chatbot
+        st.rerun()
+    else:
+        st.warning("Please enter both API keys to proceed.")
+        st.stop()  # Stop execution until user enters API keys
 
 # Function to call Mistral AI
 def get_mistral_response(messages):
     url = "https://api.mistral.ai/v1/chat/completions"
-    headers = {"Authorization": f"Bearer {MISTRAL_API_KEY}", "Content-Type": "application/json"}
+    headers = {"Authorization": f"Bearer {st.session_state.MISTRAL_API_KEY}", "Content-Type": "application/json"}
     data = {"model": "mistral-tiny", "messages": messages}
 
     response = requests.post(url, headers=headers, json=data)
@@ -54,7 +70,7 @@ def extract_travel_details(chat_history):
 def web_search(destination, interests):
     query = f"Best places in {destination} for {', '.join(interests)} in 2025"
     
-    params = {"engine": "google", "q": query, "api_key": SERPAPI_KEY}
+    params = {"engine": "google", "q": query, "api_key": st.session_state.SERPAPI_KEY}
     search = GoogleSearch(params)
     results = search.get_dict().get("organic_results", [])[:5]
 
@@ -93,7 +109,7 @@ def generate_itinerary(user_data, attractions):
 
 # Streamlit UI
 def main():
-    st.title("AI Travel Planner 🗺️")
+    # st.title("AI Travel Planner 🗺️")
 
     if "messages" not in st.session_state:
         st.session_state.messages = [{
