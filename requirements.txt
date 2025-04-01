@@ -1,3 +1,4 @@
+firebase_admin==6.7.0
 google_search_results==2.4.2
 Requests==2.32.3
 streamlit==1.44.0
